@@ -1,6 +1,9 @@
 <script>
 	import { onMount } from 'svelte';
 
+	export let quoteId;
+
+	let promise = [];
 	let username = '';
 	let firstname = '';
 	let lastname = '';
@@ -11,12 +14,10 @@
 	let region_id = 0;
 	let postcode = '';
 	let telephone = '';
+	let selected_shipping_method = '';
 
-	let shippingMethods = [];
-
-	function loadShippingMethods() {
-		let quoteId = '16BANZzh5Oqq4e6l2JMO1CvPM8qTLeQ7';
-		fetch(`/rest/default/V1/guest-carts/${quoteId}/estimate-shipping-methods`, {
+	async function loadShippingMethods() {
+		let res = await fetch(`/rest/default/V1/guest-carts/${quoteId}/estimate-shipping-methods`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -28,9 +29,14 @@
 					country_id: 'US',
 				}
 			}),
-		}).then(response => response.json()).then(data => {
-			shippingMethods = data;
 		});
+		let data = await res.json();
+
+		if (res.ok) {
+			return data;
+		} else {
+			throw new Error('Could not load shipping methods');
+		}
 	}
 
 	function onAddressChange() {
@@ -45,11 +51,11 @@
 			return;
 		}
 
-		loadShippingMethods();
+		promise = loadShippingMethods();
 	}
 
 	onMount(() => {
-		loadShippingMethods();
+		promise = loadShippingMethods();
 	});
 </script>
 
@@ -187,26 +193,33 @@
 </form>
 
 <h2>Shipping Methods</h2>
-<form class="form">
-	<table class="table-checkout-shipping-method">
-		<tbody>
-			{#each shippingMethods as method}
-				<tr class="row">
-					<td class="col col-method">
-						<input
-							class="radio"
-							type="radio"
-							name="shipping_method"
-							value="{method.carrier_code}_{method.method_code}"
-						/>
-					</td>
-					<td class="col col-price">
-						<span class="price">${method.amount}</span>
-					</td>
-					<td class="col col-method">{method.method_title}</td>
-					<td class="col col-carrier">{method.carrier_title}</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-</form>
+{#await promise}
+<p>loading...</p>
+{:then shippingMethods}
+	<form class="form">
+		<table class="table-checkout-shipping-method">
+			<tbody>
+				{#each shippingMethods as method}
+					<tr class="row" on:click={e => selected_shipping_method = method.carrier_code + "_" + method.method_code}>
+						<td class="col col-method">
+							<input
+								class="radio"
+								type="radio"
+								name="shipping_method"
+								value={method.carrier_code + "_" + method.method_code}
+								bind:group={selected_shipping_method}
+							/>
+						</td>
+						<td class="col col-price">
+							<span class="price">${method.amount}</span>
+						</td>
+						<td class="col col-method">{method.method_title}</td>
+						<td class="col col-carrier">{method.carrier_title}</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</form>
+{:catch error}
+<p>error loading shipping methods</p>
+{/await}

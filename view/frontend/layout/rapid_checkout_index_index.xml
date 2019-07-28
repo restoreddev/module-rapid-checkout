@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" layout="1column">
 	<head>
+        <title>Rapid Checkout</title>
 		<css src="Restoreddev_RapidCheckout::css/dist/bundle.css" />
         <script defer="true" src="Restoreddev_RapidCheckout::js/dist/bundle.js" />
     </head>
@@ -10,7 +11,11 @@
     	<referenceBlock name="navigation.sections" remove="true" />
     	<referenceBlock name="header.panel.wrapper" remove="true" />
     	<referenceContainer name="main">
-    		<block name="super.awesome.checkout" template="Restoreddev_RapidCheckout::app.phtml" />
+    		<block name="super.awesome.checkout" template="Restoreddev_RapidCheckout::checkout.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Restoreddev\RapidCheckout\ViewModel\Checkout</argument>
+                </arguments>
+            </block>
     	</referenceContainer>
     </body>
 </page>

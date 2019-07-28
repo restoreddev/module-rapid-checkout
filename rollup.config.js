@@ -3,7 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 
-const production = !process.env.ROLLUP_WATCH;
+const production = process.env.NODE_ENV == 'production';
 
 export default {
 	input: 'view/frontend/web/js/main.js',
