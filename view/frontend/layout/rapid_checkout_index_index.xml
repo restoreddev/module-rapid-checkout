@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" layout="1column">
+	<head>
+		<css src="Restoreddev_RapidCheckout::css/dist/bundle.css" />
+        <script defer="true" src="Restoreddev_RapidCheckout::js/dist/bundle.js" />
+    </head>
+    <body>
+    	<referenceBlock name="top.search" remove="true" />
+    	<referenceBlock name="minicart" remove="true" />
+    	<referenceBlock name="navigation.sections" remove="true" />
+    	<referenceBlock name="header.panel.wrapper" remove="true" />
+    	<referenceContainer name="main">
+    		<block name="super.awesome.checkout" template="Restoreddev_RapidCheckout::app.phtml" />
+    	</referenceContainer>
+    </body>
+</page>
