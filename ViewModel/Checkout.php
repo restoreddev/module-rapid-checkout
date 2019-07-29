@@ -24,5 +24,10 @@ class Checkout implements \Magento\Framework\View\Element\Block\ArgumentInterfac
 
     	return $this->quoteIdToMaskedQuoteId->execute($quote->getId());
     }
+
+    public function hasQuote()
+    {
+        return $this->checkoutSession->hasQuote();
+    }
 }
 

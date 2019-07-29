@@ -1,5 +1,9 @@
-<div
-	id="rapidcheckout-app"
-	data-quote-id="<?php echo $block->getViewModel()->getQuoteIdMasked(); ?>"
->
-</div>
+<?php if ($block->getViewModel()->hasQuote()): ?>
+	<div
+		id="rapidcheckout-app"
+		data-quote-id="<?php echo $block->getViewModel()->getQuoteIdMasked(); ?>"
+	>
+	</div>
+<?php else: ?>
+<p>You have no items in your shopping cart.</p>
+<?php endif; ?>
